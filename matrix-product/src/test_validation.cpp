@@ -18,8 +18,8 @@ bool validate_matrix_product(int m, int n, int k, double alpha, double beta) {
     Kokkos::deep_copy(C_reference, 0.0);
 
     // Calcul des produits matriciels
-    matrix_product_blocked(alpha, A, B, beta, C_blocked, 64);
-    matrix_product_reference(alpha, A, B, beta, C_reference);
+    matrix_product_blocked(alpha, A, B, beta, C_blocked, 64); // Méthode optimisée
+    matrix_product(alpha, A, B, beta, C_reference);           // Méthode de référence
 
     // Validation des résultats
     bool correct = true;

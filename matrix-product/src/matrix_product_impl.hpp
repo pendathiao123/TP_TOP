@@ -42,7 +42,9 @@ auto matrix_product(double alpha, AMatrixType const& A, BMatrixType const& B, do
         for (int k = 0; k < int(A.extent(1)); ++k) {
           acc += alpha * A(i, k) * B(k, j);
         }
-        C(i, j) *= beta + acc;
+        //C(i, j) *= beta + acc;
+        C(i, j) = beta * C(i, j) + acc; // Mise à jour correcte
+
       }
     }
   );
@@ -106,30 +108,5 @@ void matrix_product_blocked(double alpha, const AMatrixType& A, const BMatrixTyp
                 }
             }
         });
-}
-
-// Fonction pour valider le produit matriciel
-template <class AMatrixType, class BMatrixType, class CMatrixType>
-void matrix_product_reference(double alpha, const AMatrixType& A, const BMatrixType& B, double beta, CMatrixType& C) {
-    // Dimensions des matrices
-    int M = A.extent(0); // Nombre de lignes de A
-    int N = B.extent(1); // Nombre de colonnes de B
-    int K = A.extent(1); // Nombre de colonnes de A = nombre de lignes de B
-
-    // Vérifications
-    assert(A.extent(0) == C.extent(0)); // Nombre de lignes de A = nombre de lignes de C
-    assert(B.extent(1) == C.extent(1)); // Nombre de colonnes de B = nombre de colonnes de C
-    assert(A.extent(1) == B.extent(0)); // Nombre de colonnes de A = nombre de lignes de B
-
-    // Produit matriciel
-    for (int i = 0; i < M; ++i) {
-        for (int j = 0; j < N; ++j) {
-            double acc = 0.0; // Accumulateur pour la cellule C(i, j)
-            for (int k = 0; k < K; ++k) {
-                acc += alpha * A(i, k) * B(k, j);
-            }
-            C(i, j) = beta * C(i, j) + acc; // Mise à jour de la cellule
-        }
-    }
 }
 #endif // MATRIX_PRODUCT_IMPL_HPP
